@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime
+from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -19,7 +20,10 @@ class SignupView(CreateView):
         if self.request.user.is_authenticated:
             return redirect('notes.list')
         return super().get(request, *args, **kwargs)
-    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login_url = reverse('login')
+        return redirect(login_url)
 class LogoutInterfaceView(LogoutView):
     template_name = 'home/logout.html'
     
